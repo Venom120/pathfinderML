@@ -19,10 +19,11 @@ WHITE = (255, 255, 255)
 FONT = pygame.font.Font(None, 36)
 
 # Load images
+ICON_IMAGE = pygame.image.load("./static/agent.png")
 STONE_IMAGE = pygame.image.load("./static/stone.jpg")
 FIRE_IMAGE = pygame.image.load("./static/fire.jpg")
 DIAMOND_IMAGE = pygame.image.load("./static/diamond.jpg")
-AGENT_IMAGE = pygame.image.load("./static/agent.jpg")
+AGENT_IMAGE = pygame.image.load("./static/agent.png")
 
 AGENT_IMAGE = pygame.transform.scale(AGENT_IMAGE, (CELL_SIZE, CELL_SIZE))
 STONE_IMAGE = pygame.transform.scale(STONE_IMAGE, (CELL_SIZE, CELL_SIZE))
@@ -31,6 +32,7 @@ DIAMOND_IMAGE = pygame.transform.scale(DIAMOND_IMAGE, (CELL_SIZE, CELL_SIZE))
 
 # Set up the display
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_icon(ICON_IMAGE)
 pygame.display.set_caption("Pathfinder Game")
 
 # Initialize variables
@@ -206,8 +208,7 @@ if __name__ == "__main__":
                             screen.blit(FIRE_IMAGE, (x, y))
                         elif matrix[i][j] == 'diamond':
                             screen.blit(DIAMOND_IMAGE, (x, y))
-                        else:
-                            pygame.draw.rect(screen, (0, 0, 0), (x, y, CELL_SIZE, CELL_SIZE), 1)
+                        pygame.draw.rect(screen, (0, 0, 0), (x, y, CELL_SIZE, CELL_SIZE), 1)
 
                         # Add cell identifier
                         font = pygame.font.SysFont(None, 20)
