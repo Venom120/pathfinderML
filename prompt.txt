@@ -1,3 +1,4 @@
+subtask 1:
 - i want you to generate a matrix where randomly there will be a stone, fire, and only one diamond
 - in this game the actor(agent) will start from top left then he wants to reach top right (nxn: initially 10)
 - i want you to genrate the matrix of agent and stone,fire,diamond generation randomly set the thresholds for the number to stones and fire and diamond to be 1 exact
@@ -7,3 +8,9 @@
 - for the data of the agent construst a class so that after if i want i can add multiple agents to that matrix
 - Use the agent photo in 'static/agent.jpg'
 - Add cell identifiers to the top left of each cell, numbering them from left to right, then top to bottom.
+- the diamond and agent can never be covered from all the side it has have atleast one side open for the them to be accessed
+
+
+subtask 2:
+- now make it so that when the agent goes to the fire cell it will end the game and teleport it to 0,0 instantly
+- the agent can never move to a stone cell it will be blocked by the stone

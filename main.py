@@ -41,29 +41,35 @@ class Agent:
         self.rect.x = self.x * CELL_SIZE
         self.rect.y = self.y * CELL_SIZE
 
+    def reset(self):
+        self.x = 0
+        self.y = 0
+        self.rect.x = self.x * CELL_SIZE
+        self.rect.y = self.y * CELL_SIZE
+
 # Function to generate the matrix
 def generate_matrix(n):
     matrix = [['empty' for _ in range(n)] for _ in range(n)]
 
-    # Place stone and fire
+    # Place stone and fire, ensuring they are not on the edges
     stone_count = 0
     fire_count = 0
 
     while stone_count < 5:
-        x = random.randint(0, n - 1)
-        y = random.randint(0, n - 1)
+        x = random.randint(1, n - 2)
+        y = random.randint(1, n - 2)
         if matrix[x][y] == 'empty':
             matrix[x][y] = 'stone'
             stone_count += 1
 
     while fire_count < 5:
-        x = random.randint(0, n - 1)
-        y = random.randint(0, n - 1)
+        x = random.randint(1, n - 2)
+        y = random.randint(1, n - 2)
         if matrix[x][y] == 'empty':
             matrix[x][y] = 'fire'
             fire_count += 1
 
-    matrix[n-1][0] = 'empty'
+    # Ensure diamond has at least one open side
     matrix[n-1][n-1] = 'diamond'
 
     return matrix
@@ -79,22 +85,23 @@ def game():
             if event.type == pygame.QUIT:
                 running = False
             if event.type == pygame.KEYDOWN:
+                new_x, new_y = agent.x, agent.y
                 if event.key == pygame.K_LEFT:
-                    agent.move(-1, 0)
-                if event.key == pygame.K_RIGHT:
-                    agent.move(1, 0)
-                if event.key == pygame.K_UP:
-                    agent.move(0, -1)
-                if event.key == pygame.K_DOWN:
-                    agent.move(0, 1)
-        if agent.x < 0:
-            agent.x = 0
-        if agent.x > GRID_SIZE -1:
-            agent.x = GRID_SIZE -1
-        if agent.y < 0:
-            agent.y = 0
-        if agent.y > GRID_SIZE -1:
-            agent.y = GRID_SIZE -1
+                    new_x -= 1
+                elif event.key == pygame.K_RIGHT:
+                    new_x += 1
+                elif event.key == pygame.K_UP:
+                    new_y -= 1
+                elif event.key == pygame.K_DOWN:
+                    new_y += 1
+
+                if 0 <= new_x < GRID_SIZE and 0 <= new_y < GRID_SIZE and matrix[new_y][new_x] != 'stone':
+                    agent.move(new_x - agent.x, new_y - agent.y)
+
+        # Check for fire
+        if matrix[agent.y][agent.x] == 'fire':
+            agent.reset()
+
         # Draw everything
         screen.fill(WHITE)
 
