@@ -3,8 +3,6 @@ import random
 import sys
 import pygame.event
 
-
-
 # Initialize Pygame
 pygame.init()
 
@@ -26,6 +24,7 @@ FIRE_IMAGE = pygame.image.load("./static/fire.jpg")
 DIAMOND_IMAGE = pygame.image.load("./static/diamond.jpg")
 AGENT_IMAGE = pygame.image.load("./static/agent.jpg")
 
+AGENT_IMAGE = pygame.transform.scale(AGENT_IMAGE, (CELL_SIZE, CELL_SIZE))
 STONE_IMAGE = pygame.transform.scale(STONE_IMAGE, (CELL_SIZE, CELL_SIZE))
 FIRE_IMAGE = pygame.transform.scale(FIRE_IMAGE, (CELL_SIZE, CELL_SIZE))
 DIAMOND_IMAGE = pygame.transform.scale(DIAMOND_IMAGE, (CELL_SIZE, CELL_SIZE))
@@ -44,26 +43,13 @@ max_levels = 100
 WINNERS_FILE = "winners.txt"
 
 # Agent class
-class GameObject(pygame.sprite.Sprite):
-    def __init__(self, image, x, y, width, height):
-        super().__init__()
-        self.image = pygame.transform.scale(image, (width, height))
-        self.rect = self.image.get_rect()
-        self.rect.x = x
-        self.rect.y = y
-
-    def draw(self, surface):
-        surface.blit(self.image, self.rect)
-
-class Agent(GameObject):
-    def __init__(self, image, x, y):
-        super().__init__(image, x, y, CELL_SIZE, CELL_SIZE)
+class Agent:
+    def __init__(self, x, y):
         self.x = x
         self.y = y
         self.rect = AGENT_IMAGE.get_rect()
         self.rect.x = x * CELL_SIZE
         self.rect.y = y * CELL_SIZE + OFFSET
-
 
     def move(self, dx, dy):
         self.x += dx
@@ -103,6 +89,7 @@ def generate_matrix(n, level):
     matrix[n-1][n-1] = 'diamond'
 
     return matrix
+
 # Draw the menu bar
 def draw_menu_bar(score, level):
     pygame.draw.rect(screen, (200, 200, 200), (0, 0, WIDTH, OFFSET))
@@ -133,7 +120,7 @@ if __name__ == "__main__":
         # --- Event Handling ---
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                running[0] = False
+                running = False
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     running = False
@@ -262,9 +249,9 @@ if __name__ == "__main__":
 
         # --- Drawing ---
         draw_menu_bar(score, level) # Draw menu bar always
+
         pygame.display.flip()
         clock.tick(60)
 
-    event_thread.join()
     pygame.quit()
     sys.exit()
