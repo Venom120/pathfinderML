@@ -1,0 +1,9 @@
+- i want you to generate a matrix where randomly there will be a stone, fire, and only one diamond
+- in this game the actor(agent) will start from top left then he wants to reach top right (nxn: initially 10)
+- i want you to genrate the matrix of agent and stone,fire,diamond generation randomly set the thresholds for the number to stones and fire and diamond to be 1 exact
+- the diamond will always be in the bottom right corner
+- pics of stone, fire, diamond, agent are in ./static folder.
+- for now just generate the pygame to implement the frontend using white background
+- for the data of the agent construst a class so that after if i want i can add multiple agents to that matrix
+- Use the agent photo in 'static/agent.jpg'
+- Add cell identifiers to the top left of each cell, numbering them from left to right, then top to bottom.
