@@ -56,15 +56,15 @@ def generate_matrix(n):
     fire_count = 0
 
     while stone_count < 5:
-        x = random.randint(2, n - 2)
-        y = random.randint(2, n - 2)
+        x = random.randint(1, n - 2)
+        y = random.randint(1, n - 2)
         if matrix[x][y] == 'empty':
             matrix[x][y] = 'stone'
             stone_count += 1
 
     while fire_count < 5:
-        x = random.randint(2, n - 2)
-        y = random.randint(2, n - 2)
+        x = random.randint(1, n - 2)
+        y = random.randint(1, n - 2)
         if matrix[x][y] == 'empty':
             matrix[x][y] = 'fire'
             fire_count += 1
@@ -98,13 +98,18 @@ def game():
                 if 0<=new_x<GRID_SIZE and 0<=new_y<GRID_SIZE and matrix[new_y][new_x] != 'stone':
                     agent.move(new_x - agent.x, new_y - agent.y)
 
-        # Check for fire
-        if matrix[agent.y][agent.x] == 'fire':
-            agent.reset()
-
-        # Draw everything
-        screen.fill(WHITE)
-
+        
+                # Check for fire
+                if matrix[agent.y][agent.x] == 'fire':
+                    agent.reset()
+        
+                # Check for diamond
+                if matrix[agent.y][agent.x] == 'diamond':
+                    matrix = generate_matrix(GRID_SIZE)
+                    agent.reset()
+        
+                # Draw everything
+                screen.fill(WHITE)
         # Draw the grid
         for i in range(GRID_SIZE):
             for j in range(GRID_SIZE):

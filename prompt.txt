@@ -14,3 +14,4 @@ subtask 1:
 subtask 2:
 - now make it so that when the agent goes to the fire cell it will end the game and teleport it to 0,0 instantly
 - the agent can never move to a stone cell it will be blocked by the stone
+- if diamond is acheived the games restarts and the matrix is again generated
