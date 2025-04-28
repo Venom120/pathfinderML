@@ -10,7 +10,6 @@ subtask 1(frontend):
 - Add cell identifiers to the top left of each cell, numbering them from left to right, then top to bottom.
 - the diamond and agent can never be covered from all the side it has have atleast one side open for the them to be accessed
 
-
 subtask 2(normal game features):
 - Implement agent movement based on arrow key presses (Left, Right, Up, Down).
 - Prevent the agent from moving into cells containing 'stone'.
