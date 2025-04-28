@@ -56,15 +56,15 @@ def generate_matrix(n):
     fire_count = 0
 
     while stone_count < 5:
-        x = random.randint(1, n - 2)
-        y = random.randint(1, n - 2)
+        x = random.randint(2, n - 2)
+        y = random.randint(2, n - 2)
         if matrix[x][y] == 'empty':
             matrix[x][y] = 'stone'
             stone_count += 1
 
     while fire_count < 5:
-        x = random.randint(1, n - 2)
-        y = random.randint(1, n - 2)
+        x = random.randint(2, n - 2)
+        y = random.randint(2, n - 2)
         if matrix[x][y] == 'empty':
             matrix[x][y] = 'fire'
             fire_count += 1
@@ -95,7 +95,7 @@ def game():
                 elif event.key == pygame.K_DOWN:
                     new_y += 1
 
-                if 0 <= new_x < GRID_SIZE and 0 <= new_y < GRID_SIZE and matrix[new_y][new_x] != 'stone':
+                if 0<=new_x<GRID_SIZE and 0<=new_y<GRID_SIZE and matrix[new_y][new_x] != 'stone':
                     agent.move(new_x - agent.x, new_y - agent.y)
 
         # Check for fire
