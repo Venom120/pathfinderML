@@ -11,10 +11,36 @@ subtask 1(frontend):
 - the diamond and agent can never be covered from all the side it has have atleast one side open for the them to be accessed
 
 subtask 2(normal game features):
-- now make it so that when the agent goes to the fire cell it will end the game and teleport it to 0,0 instantly
-- the agent can never move to a stone cell it will be blocked by the stone
-- if diamond is acheived the games restarts and the matrix is again generated
-- reduce the time complexity in recording the events with using multithreading
+- Implement agent movement based on arrow key presses (Left, Right, Up, Down).
+- Prevent the agent from moving into cells containing 'stone'.
+- When the agent moves into a 'fire' cell, reset the agent's position to (0,0) and increment the attempts counter.
+- When the agent reaches the 'diamond' cell:
+    - Increment the level.
+    - If the level exceeds 100, write the final score and attempts to 'winners.txt' and exit the game.
+    - Generate a new matrix for the next level.
+    - Reset the agent's position to (0,0).
+- Add a menu bar at the top of the screen (north of the matrix) with a height of 40 pixels. Use an OFFSET constant for positioning elements below the menu bar.
+- The menu bar should contain:
+    - A "Restart" button on the left. Clicking this button resets the score, level (to 1), and attempts (to 0), generates a new matrix, and moves the agent to (0,0).
+    - A "Reset" button in the center-left. Clicking this button resets the agent's position to (0,0) and resets the score to the value it was at the start of the current level. The matrix is NOT regenerated on reset.
+    - A score counter in the center, displaying the current score (number of moves).
+    - A level counter on the right, displaying the current level.
+- Adjust the number of 'stone' and 'fire' elements generated based on the level:
+    - Increase stone count by 2 every 20 levels (starting from level 20).
+    - Increase fire count by 2 every 10 levels (starting from level 10), except on levels that are multiples of 20.
+- Ensure the screen drawing is optimized to prevent flickering by clearing the screen and redrawing elements in the main game loop and after a reset button click.
+- Ensure the initial position of the agent and the drawing of grid elements and cell identifiers are correctly offset by the menu bar height.
 
-subtask 3(implementing ML):
+subtask 3(Pause Feature - Single-threaded):
+- Implement a pause feature triggered by the spacebar, managed within the main game loop.
+- Use a boolean flag (`is_paused`) to track the pause state.
+- When paused:
+    - Stop processing game logic updates (movement, collisions, etc.).
+    - Stop processing input events other than unpausing (spacebar) or quitting (ESC, window close).
+    - Draw a pause symbol (two vertical parallel rectangles) in the center of the screen, using the same color as the menu bar.
+- Apply a pixelated effect to the game area (below the menu bar) to visually indicate the paused state.
+- Keep the menu bar visible and interactive (if applicable, though current implementation pauses menu interaction too).
+- The pixelated effect is only applied once per pause/unpause cycle.
+
+subtask 4(implementing ML):
 -
