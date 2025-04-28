@@ -1,4 +1,4 @@
-subtask 1:
+subtask 1(frontend):
 - i want you to generate a matrix where randomly there will be a stone, fire, and only one diamond
 - in this game the actor(agent) will start from top left then he wants to reach top right (nxn: initially 10)
 - i want you to genrate the matrix of agent and stone,fire,diamond generation randomly set the thresholds for the number to stones and fire and diamond to be 1 exact
@@ -11,7 +11,10 @@ subtask 1:
 - the diamond and agent can never be covered from all the side it has have atleast one side open for the them to be accessed
 
 
-subtask 2:
+subtask 2(normal game features):
 - now make it so that when the agent goes to the fire cell it will end the game and teleport it to 0,0 instantly
 - the agent can never move to a stone cell it will be blocked by the stone
 - if diamond is acheived the games restarts and the matrix is again generated
+
+subtask 3(implementing ML):
+- 
