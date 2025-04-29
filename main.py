@@ -136,8 +136,6 @@ if __name__ == "__main__":
                         matrix = generate_matrix(GRID_SIZE, level)
                         agent.reset()
                     if event.key == pygame.K_q:
-                        with open(WINNERS_FILE, "a") as file:
-                            file.write(f"Score: {score}, Attempts: {attempts}\n")
                         running = False
                     # Agent movement keys
                     if event.key == pygame.K_LEFT or event.key == pygame.K_a:
