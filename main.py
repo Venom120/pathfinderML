@@ -41,7 +41,7 @@ pygame.display.set_caption("Pathfinder Game")
 score = 0
 level = 1
 attempts = 0
-max_levels = 100
+max_levels = 50
 num_agents = 5
 
 # Winners file
@@ -147,7 +147,6 @@ def train_q_learning(agents, matrix, q_agent, num_episodes): # Removed training 
                 if event.key == pygame.K_SPACE:
                     is_paused = not is_paused  # Toggle pause state
                 if event.key == pygame.K_r:
-                    score = 0
                     level = 1
                     attempts = 0
                     matrix = generate_matrix(GRID_SIZE, level)
@@ -161,7 +160,6 @@ def train_q_learning(agents, matrix, q_agent, num_episodes): # Removed training 
                 x, y = pygame.mouse.get_pos()
                 if y < OFFSET:  # Menu bar click
                     if 10 <= x <= 100:  # Restart button
-                        score = 0
                         level = 1
                         attempts = 0
                         matrix = generate_matrix(GRID_SIZE, level)
@@ -174,7 +172,6 @@ def train_q_learning(agents, matrix, q_agent, num_episodes): # Removed training 
         # Reset agent positions and diamond status at the start of each episode
         for agent in agents:
             agent.reset()
-        states = [(agent.x, agent.y) for agent in agents]
         done = [False] * len(agents)
         total_reward = [0] * len(agents)
         while not all(done):
@@ -193,7 +190,6 @@ def train_q_learning(agents, matrix, q_agent, num_episodes): # Removed training 
                             is_paused = not is_paused # Toggle pause state
                         if not is_paused: # Process game actions only if not paused
                             if event.key == pygame.K_r:
-                                score = 0
                                 level = 1
                                 attempts = 0
                                 matrix = generate_matrix(GRID_SIZE, level)
@@ -288,8 +284,6 @@ def train_q_learning(agents, matrix, q_agent, num_episodes): # Removed training 
 
         for i in range(len(agents)):
             rewards.append(total_reward[i])
-        # if (episode + 1) % 100 == 0:
-        #     print(f"Episode {episode + 1}: Total Reward = {sum(total_reward)/len(agents)}")
     return rewards, attempts
 
 # Game loop
@@ -406,6 +400,12 @@ if __name__ == "__main__":
                 agent.rect.x = agent.x * CELL_SIZE
                 agent.rect.y = agent.y * CELL_SIZE + OFFSET
 
+                # Check if the agent is in the middle (not on boundary), but NOT at the diamond location
+                is_middle = (
+                    1 <= agent.x < GRID_SIZE - 1 and
+                    1 <= agent.y < GRID_SIZE - 1 and
+                    (agent.x, agent.y) != (GRID_SIZE - 1, GRID_SIZE - 1)
+                )
 
                 if matrix[agent.y][agent.x] == 'fire':
                     agent.reset()
@@ -416,10 +416,15 @@ if __name__ == "__main__":
                 elif matrix[agent.y][agent.x] == 'diamond':
                     agent.has_reached_diamond = True
                     reward = 10
+                    # Increase reward if agent reached diamond from the middle (but not at diamond itself)
+                    # (No need to multiply here since (agent.x, agent.y) == (9,9) is excluded in is_middle)
                     q_agent.observe(state, action, reward, (agent.x, agent.y))
                     done[agent_index] = True
                 else:
                     reward = -0.1
+                    # Increase reward if agent is moving in the middle of the matrix (but not at diamond)
+                    if is_middle:
+                        reward *= 10
                     q_agent.observe(state, action, reward, (agent.x, agent.y))
                     done[agent_index] = False
 
@@ -499,3 +504,8 @@ if __name__ == "__main__":
         pygame.display.flip()
         clock.tick(60)
         time.sleep(0.01) # Add sleep to control game speed
+
+    print("Agents scores at the end of the game:")
+    for agent in agents:
+        print(f"Agent {agent.agent_id}: {agent.score}")
+    pygame.quit()

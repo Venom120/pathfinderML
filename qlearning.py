@@ -14,8 +14,6 @@ def manhattan_distance(cell, goal=(9, 9)):
 
 class QTable:
     def __init__(self):
-        # Hardcoded Q-matrix for demonstration: {(state), action: value}
-        # Example: {((x, y), action): q_value}
         self.q = {}
         actions = ['up', 'down', 'left', 'right']
         goal = (9, 9)
@@ -24,7 +22,6 @@ class QTable:
         for x in range(grid_size):
             for y in range(grid_size):
                 for action in actions:
-                    # Calculate next cell after action
                     nx, ny = x, y
                     if action == 'up' and y > 0:
                         ny -= 1
@@ -35,21 +32,42 @@ class QTable:
                     elif action == 'right' and x < grid_size - 1:
                         nx += 1
 
-                    # Manhattan distances
                     dist_now = manhattan_distance((x, y), goal)
                     dist_next = manhattan_distance((nx, ny), goal)
 
-                    # Q-value: higher if moving closer to goal, 1.0 for reaching goal, 0.0 if at goal
+                    is_middle = (
+                        1 <= nx < grid_size - 1 and
+                        1 <= ny < grid_size - 1 and
+                        (nx, ny) != goal
+                    )
+
+                    # --- NEW LOGIC: Encourage bottom row and rightmost column ---
+                    is_bottom_row = (y == grid_size - 1 and x < grid_size - 1)
+                    is_right_col = (x == grid_size - 1 and y < grid_size - 1)
+
+                    # Identify special cells for extra boost
+                    cell_num = ny * grid_size + nx + 1
+                    high_reward_cells = {50, 60, 70, 90, 95, 96, 97, 98, 99, 100}
+                    low_reward_cells = {10, 20, 30, 40, 91, 92, 93, 94}
+
+                    boost = 1.0
+                    if cell_num in high_reward_cells:
+                        boost = 8.0
+                    elif cell_num in low_reward_cells:
+                        boost = 0.5
+                    elif (is_bottom_row or is_right_col) and dist_next < dist_now:
+                        boost = 4.0
+
                     if (x, y) == goal:
                         q_value = 0.0
                     elif (nx, ny) == goal:
-                        q_value = 1.0
+                        q_value = 100.0
                     elif dist_next < dist_now:
-                        q_value = 0.8
+                        q_value = (8.0 if is_middle else 0.8) * boost
                     elif dist_next == dist_now:
-                        q_value = 0.5
+                        q_value = (5.0 if is_middle else 0.5) * boost
                     else:
-                        q_value = 0.2
+                        q_value = (2.0 if is_middle else 0.2) * boost
 
                     self.q[((x, y), action)] = q_value
 

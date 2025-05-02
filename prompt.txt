@@ -52,3 +52,12 @@ subtask 4 (implementing ML):
 - When "Restart" is clicked, all scores, level, and attempts are reset, and a new matrix is generated.
 - The 'q' and 'ESC' keys exit the game, and the spacebar toggles pause.
 - The game supports up to 100 levels, and writes the final score and attempts to 'winners.txt' when finished.
+
+subtask 5 (updating constant values to make the agent choose path from between the matrix):
+- Increase reward value 10 times if the agent chooses a path that is from between the matrix and not on the boundary.
+- The reward is further increased for paths in the middle of the matrix.
+- Now if there is a fire/stone on s89 diagonal left up from 9,9 the agent fails to reach the diamond hence after half of bottom row the reward is not too low but still low.. same on the right right column after half the reward is low but not too low (except 9,9 cause this way the model is not choosing the diamond location).
+- To address this, you can increase the Q-value (reward) for actions that move the agent closer to the diamond when the agent is in the bottom row or rightmost column, especially near the diamond. This will encourage the agent to prefer these paths even if there is a fire blocking the direct diagonal.
+- This change boosts the Q-value for moves along the bottom row and rightmost column (except the diamond itself) if they bring the agent closer to the goal.
+- This will help agents learn to "go around" obstacles like fire near the diagonal and still reach the diamond efficiently.
+- Cells s50, s60, s70, s90, and s95 to s99 have higher reward values than s10, s20, s30, s40, and s91 to s94. This makes the agent prefer the middle and end of the bottom row/rightmost column (near the goal), while the early parts of these edges are less attractive.
