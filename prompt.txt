@@ -1,46 +1,54 @@
-subtask 1(frontend):
-- i want you to generate a matrix where randomly there will be a stone, fire, and only one diamond
-- in this game the actor(agent) will start from top left then he wants to reach top right (nxn: initially 10)
-- i want you to genrate the matrix of agent and stone,fire,diamond generation randomly set the thresholds for the number to stones and fire and diamond to be 1 exact
-- the diamond will always be in the bottom right corner
-- pics of stone, fire, diamond, agent are in ./static folder.
-- for now just generate the pygame to implement the frontend using white background
-- for the data of the agent construst a class so that after if i want i can add multiple agents to that matrix
-- Use the agent photo in 'static/agent.jpg'
-- Add cell identifiers to the top left of each cell, numbering them from left to right, then top to bottom.
-- the diamond and agent can never be covered from all the side it has have atleast one side open for the them to be accessed
+subtask 1 (frontend):
+- Generate a matrix/grid (default 10x10) where each cell can be empty, stone, fire, or diamond.
+- Randomly place stones and fire in the grid, with thresholds for their counts based on the level (see below).
+- Place exactly one diamond, always in the bottom right corner (9,9).
+- The agent(s) always start at the top left (0,0).
+- Ensure the diamond and agent are never completely surrounded (at least one open side).
+- Use images from ./static for stone, fire, diamond, and agent (agent image: 'static/agent.png').
+- Draw the grid with a white background.
+- Add cell identifiers to the top left of each cell, numbering left-to-right, top-to-bottom.
+- Construct an Agent class to support multiple agents in the grid.
+- Draw all agents using their image, and support multiple agents on the grid at once.
 
-subtask 2(normal game features):
-- Implement agent movement based on arrow key presses (Left, Right, Up, Down).
-- Prevent the agent from moving into cells containing 'stone'.
-- When the agent moves into a 'fire' cell, reset the agent's position to (0,0) and increment the attempts counter.
-- When the agent reaches the 'diamond' cell:
-    - Increment the level.
+subtask 2 (normal game features):
+- Implement agent movement based on Q-learning (agents move automatically) and allow for multiple agents (default 2, can be more).
+- Prevent agents from moving into 'stone' cells.
+- If an agent moves into a 'fire' cell, reset its position to (0,0) and increment the attempts counter.
+- When an agent reaches the 'diamond' cell:
+    - Mark the agent as finished for the level (it stops moving and training).
+    - When all agents reach the diamond, increment the level and generate a new matrix.
     - If the level exceeds 100, write the final score and attempts to 'winners.txt' and exit the game.
-    - Generate a new matrix for the next level.
-    - Reset the agent's position to (0,0).
-- Add a menu bar at the top of the screen (north of the matrix) with a height of 40 pixels. Use an OFFSET constant for positioning elements below the menu bar.
-- The menu bar should contain:
-    - A "Restart" button on the left. Clicking this button resets the score, level (to 1), and attempts (to 0), generates a new matrix, and moves the agent to (0,0).
-    - A "Reset" button in the center-left. Clicking this button resets the agent's position to (0,0) and resets the score to the value it was at the start of the current level. The matrix is NOT regenerated on reset.
-    - A score counter in the center, displaying the current score (number of moves).
-    - A level counter on the right, displaying the current level.
-- Adjust the number of 'stone' and 'fire' elements generated based on the level:
-    - Increase stone count by 2 every 20 levels (starting from level 20).
-    - Increase fire count by 2 every 10 levels (starting from level 10), except on levels that are multiples of 20.
-- Ensure the screen drawing is optimized to prevent flickering by clearing the screen and redrawing elements in the main game loop and after a reset button click.
-- Ensure the initial position of the agent and the drawing of grid elements and cell identifiers are correctly offset by the menu bar height.
+    - Reset all agents' positions to (0,0) for the new level.
+- Add a menu bar at the top (height 40px, controlled by OFFSET) with:
+    - "Restart" button (left): resets score, level (to 1), attempts (to 0), generates a new matrix, and resets all agents.
+    - "Reset" button (center-left): resets all agents to (0,0) and restores their scores to the value at the start of the current level (does not regenerate the matrix).
+    - Score counter in the center, displaying each agent's score (comma-separated).
+    - Level counter on the right.
+    - Attempts counter (optional, can be displayed).
+- Adjust stone and fire counts by level:
+    - Stones: 5 + 2 for every 20 levels (starting from level 20).
+    - Fire: 5 + 2 for every 10 levels (except multiples of 20).
+- Ensure the grid and menu bar are redrawn every frame to prevent flickering and keep UI updated.
+- All drawing is offset by the menu bar height.
 
-subtask 3(Pause Feature - Single-threaded):
-- Implement a pause feature triggered by the spacebar, managed within the main game loop.
-- Use a boolean flag (`is_paused`) to track the pause state.
+subtask 3 (Pause Feature - Single-threaded):
+- Implement a pause feature toggled by the spacebar (`is_paused` flag).
 - When paused:
-    - Stop processing game logic updates (movement, collisions, etc.).
-    - Stop processing input events other than unpausing (spacebar) or quitting (ESC, window close).
-    - Draw a pause symbol (two vertical parallel rectangles) in the center of the screen, using the same color as the menu bar.
-- Apply a pixelated effect to the game area (below the menu bar) to visually indicate the paused state.
-- Keep the menu bar visible and interactive (if applicable, though current implementation pauses menu interaction too).
-- The pixelated effect is only applied once per pause/unpause cycle.
+    - Stop all agent movement and game logic except for unpausing (spacebar), quitting (ESC, window close), and menu bar drawing.
+    - Draw a pause symbol (two vertical bars) in the center of the screen, using the menu bar color.
+    - Apply a pixelated effect to the game area (below the menu bar) to indicate pause state.
+    - The menu bar remains visible and interactive (if desired).
+    - The pixelated effect is only applied once per pause/unpause cycle.
 
-subtask 4(implementing ML):
--
+subtask 4 (implementing ML):
+- Implement Q-learning for agent movement.
+- Support multiple agents (default 2, can be more, e.g., 5) moving simultaneously in each step.
+- Each agent learns and moves independently, but all agents act in parallel each step.
+- When an agent reaches the diamond, it stops moving/training for the rest of the level.
+- When all agents reach the diamond, the level increments and a new matrix is generated.
+- The score for each agent is displayed in the menu bar and is not reset after each level.
+- The score for each agent is incremented only if the agent has not reached the diamond.
+- When "Reset" is clicked, all agents are reset to (0,0) and their scores are restored to the value at the start of the current level.
+- When "Restart" is clicked, all scores, level, and attempts are reset, and a new matrix is generated.
+- The 'q' and 'ESC' keys exit the game, and the spacebar toggles pause.
+- The game supports up to 100 levels, and writes the final score and attempts to 'winners.txt' when finished.
