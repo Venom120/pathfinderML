@@ -41,7 +41,7 @@ score = 0
 level = 1
 attempts = 0
 max_levels = 50
-num_agents = 1
+num_agents = 5
 
 # Winners file
 WINNERS_FILE = "winners.txt"
