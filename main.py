@@ -1,7 +1,6 @@
 import time
 import pygame
 import random
-import sys
 import pygame.event
 import qlearning
 
@@ -42,7 +41,7 @@ score = 0
 level = 1
 attempts = 0
 max_levels = 50
-num_agents = 5
+num_agents = 1
 
 # Winners file
 WINNERS_FILE = "winners.txt"
@@ -503,7 +502,7 @@ if __name__ == "__main__":
 
         pygame.display.flip()
         clock.tick(60)
-        time.sleep(0.01) # Add sleep to control game speed
+        time.sleep(0.1) # Add sleep to control game speed
 
     print("Agents scores at the end of the game:")
     for agent in agents:
